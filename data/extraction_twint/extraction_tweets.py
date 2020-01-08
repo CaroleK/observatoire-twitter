@@ -57,13 +57,13 @@ class Search(Thread):
 
 def extract_service_clients_data():
     #Load csv with account names + filenames
-    brands = load_csv('brand_accounts.csv')
+    brands = load_csv('D:/Centrale 3A/OSY/Data Science/repos/observatoire-twitter/extraction_twint/brand_accounts.csv')
 
     #Launch a search for every brand, and store it in the appropriate file
     for brand in brands:
 
         #set up the search
-        filename = "data_service_clients/" + brand.get("filename") + ".csv"
+        filename = "D:/Centrale 3A/OSY/Data Science/repos/observatoire-twitter/extraction_twint/data_service_clients/" + brand.get("filename") + ".csv"
         search=Search(filename, keyword=brand["account"])
         #start the search
         search.start()
@@ -71,14 +71,14 @@ def extract_service_clients_data():
 
 def extract_marketing_personnalise_data():
     #Load csv with account names + filenames
-    products = [product.get('product') for product in load_csv('product_keywords.csv')]
+    products = [product.get('product') for product in load_csv('D:/Centrale 3A/OSY/Data Science/repos/observatoire-twitter/extraction_twint/product_keywords.csv')]
 
     #Launch a search for every brand, and store it in the appropriate file
     for product in products:
         print(product)
 
         #set up the search
-        filename = "data_marketing_personnalise/" + product + ".csv"
+        filename = "D:/Centrale 3A/OSY/Data Science/repos/observatoire-twitter/extraction_twint/data_marketing_personnalise/" + product + ".csv"
         search=Search(filename, keyword=product)
         #start the search
         search.start()
