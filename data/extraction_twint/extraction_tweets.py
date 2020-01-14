@@ -5,8 +5,6 @@ from threading import Thread, Lock
 import numpy as np
 import asyncio
 
-lock = Lock()
-
 def load_csv(file):
     rows = []
     with open(file, newline='',encoding='utf-8-sig') as csvfile:
@@ -16,7 +14,7 @@ def load_csv(file):
     return rows
 
 class Search(Thread):
-    def __init__(self, file, keyword=None, mention = None, to_username=None, from_username=None, allow_append=False, limit=None, user_info=None):
+    def __init__(self, file, keyword=None, mention = None, to_username=None, from_username=None, allow_append=False, limit=None, user_info=None, members_list=None):
         self.file = file
         self.keyword = keyword
         self.mention = mention
@@ -25,6 +23,7 @@ class Search(Thread):
         self.allow_append = allow_append
         self.limit = limit
         self.user_info = user_info
+        self.members_list = members_list
         Thread.__init__(self)
 
     def run(self):
@@ -47,6 +46,8 @@ class Search(Thread):
             c.Limit = self.limit
         if self.user_info:
             c.User_full = True
+        if self.members_list:
+            c.Members_list = self.members_list
 
         ##Exemple of query : from WholeFoods to IIMiranda
         # c.To = "IIMiranda"
@@ -68,32 +69,30 @@ class Search(Thread):
             print("Search done")
 
 
-def extract_service_clients_data():
+def extract_service_clients_data(numberOfBrands, limitNumberOfTweets):
     #Load csv with account names + filenames
     brands = load_csv('D:/Centrale 3A/OSY/Data Science/repos/observatoire-twitter/data/extraction_twint/brand_accounts.csv')
 
     #Launch a search for every brand, and store it in the appropriate file
-    for brand in brands:
+    for i in range(numberOfBrands):
 
         #set up the search
-        filename = "D:/Centrale 3A/OSY/Data Science/repos/observatoire-twitter/data/extraction_twint/tweets_data/data_service_clients/" + brand.get("filename") + ".csv"
-        search=Search(filename, mention=brand["account"])
+        filename = "D:/Centrale 3A/OSY/Data Science/repos/observatoire-twitter/data/extraction_twint/tweets_data/data_service_clients/" + brands[i].get("filename") + ".csv"
+        search=Search(filename, mention=brands[i].get("account"), limit=limitNumberOfTweets)
         #start the search
         search.start()
     
 
-def extract_marketing_personnalise_data(numberOfBrands,limitNumberOfTweets):
+def extract_marketing_personnalise_data(numberOfProducts,limitNumberOfTweets):
     
     # Load brands' name
-    brands = [brand.get('product') for brand in load_csv('D:/Centrale 3A/OSY/Data Science/repos/observatoire-twitter/data/extraction_twint/product_keywords.csv')]
+    products = [product.get('product') for product in load_csv('D:/Centrale 3A/OSY/Data Science/repos/observatoire-twitter/data/extraction_twint/product_keywords.csv')]
     
     #1. FIRST EXTRACTION : Tweets containing the brand
-
-    first_extraction_thread = Thread(target=first_extraction_marketing_personnalise, args=(brands, numberOfBrands,limitNumberOfTweets))
+    first_extraction_thread = Thread(target=first_extraction_marketing_personnalise, args=(products, numberOfProducts,limitNumberOfTweets))
     
     #2. SECOND EXTRACTION : Users' tweets
-    
-    second_extraction_thread = Thread(target=second_extraction_marketing_personnalise, args=(brands, numberOfBrands))
+    second_extraction_thread = Thread(target=second_extraction_marketing_personnalise, args=(products, numberOfProducts))
 
     # Launch threads one after another
     first_extraction_thread.start()
@@ -103,16 +102,15 @@ def extract_marketing_personnalise_data(numberOfBrands,limitNumberOfTweets):
     second_extraction_thread.join()
 
 
-def first_extraction_marketing_personnalise(brands, numberOfBrands, limitNumberOfTweets):
+def first_extraction_marketing_personnalise(products, numberOfProducts, limitNumberOfTweets):
     
-
     #Launch a search for every brand, and store it in the appropriate file
     searchs = []
-    for i in range(numberOfBrands):
+    for i in range(numberOfProducts):
         #set up the search
-        filename = 'D:/Centrale 3A/OSY/Data Science/repos/observatoire-twitter/data/extraction_twint/tweets_data/data_marketing_personnalise/' + brands[i] + '.csv'
+        filename = 'D:/Centrale 3A/OSY/Data Science/repos/observatoire-twitter/data/extraction_twint/tweets_data/data_marketing_personnalise/' + products[i] + '.csv'
 
-        search=Search(filename, keyword=brands[i], limit=limitNumberOfTweets)
+        search=Search(filename, keyword=products[i], limit=limitNumberOfTweets, members_list=[products[i]])
         searchs.append(search)
         #start the search
         search.start()
@@ -122,15 +120,15 @@ def first_extraction_marketing_personnalise(brands, numberOfBrands, limitNumberO
         search.join()
     
 
-def second_extraction_marketing_personnalise(brands, numberOfBrands):
+def second_extraction_marketing_personnalise(products, numberOfProducts):
 
-    for i in range(numberOfBrands):
-        filename = 'D:/Centrale 3A/OSY/Data Science/repos/observatoire-twitter/data/extraction_twint/tweets_data/data_marketing_personnalise/' + brands[i] + '.csv'
+    for i in range(numberOfProducts):
+        filename = 'D:/Centrale 3A/OSY/Data Science/repos/observatoire-twitter/data/extraction_twint/tweets_data/data_marketing_personnalise/' + products[i] + '.csv'
        
         users  = [tweet.get('username') for tweet in load_csv(filename)]
         users_unique = get_unique(users)
        
-        filename2 = "D:/Centrale 3A/OSY/Data Science/repos/observatoire-twitter/data/extraction_twint/tweets_data/data_marketing_personnalise/" + brands[i] + "_users.csv"
+        filename2 = "D:/Centrale 3A/OSY/Data Science/repos/observatoire-twitter/data/extraction_twint/tweets_data/data_marketing_personnalise/" + products[i] + "_users.csv"
 
         for user in users_unique :
             search_users_tweets=Search(filename2, from_username=user, limit=100)
@@ -144,7 +142,7 @@ def get_unique(a_list):
 
 if __name__=="__main__":
 
-    #extract_service_clients_data()
+    #extract_service_clients_data(1, 200)
     extract_marketing_personnalise_data(2, 100)
 
 
