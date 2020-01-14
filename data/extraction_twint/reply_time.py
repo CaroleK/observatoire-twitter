@@ -3,7 +3,7 @@ import numpy as np
 import os
 import csv
 
-path = os.path.normpath(os.path.dirname(os.path.abspath(__file__))+"/../../data/extraction_twint/data_service_clients/")
+path = os.path.normpath(os.path.dirname(os.path.abspath(__file__))+"/../../data/extraction_twint/tweets_data/data_service_clients/")
 
 def __load_data(filename):
     """
@@ -64,11 +64,11 @@ def __load_csv(file):
 def computes_all_reply_times():
     #Load csv with account names + filenames
 
-    brands = __load_csv(os.path.normpath(path+"/brand_accounts.csv"))
+    brands = __load_csv(os.path.normpath(path+"/../../brand_accounts.csv"))
 
     #computes the reply time for every brand, and store it in the appropriate file
     for brand in brands:
-        create_reply_time(brand["username"], brand.get("filename"), save_to_csv=True)
+        create_reply_time(brand["account"], brand.get("filename"), save_to_csv=True)
 
 if __name__=="__main__":
     ##COMPUTES ALL REPLY_TIMES
