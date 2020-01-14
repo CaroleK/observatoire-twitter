@@ -1,4 +1,4 @@
-data_marketing_personnalise/
+**/data_marketing_personnalise/*.csv
 **/data_service_clients/raw/*.csv
 **/data_service_clients/with_reply_time/*.csv
 .ipynb_checkpoints
@@ -8,3 +8,5 @@ __pycache__/
 credentials.py
 .vscode
 .vs
+**/extraction_manual/tweets_data
+**/extraction-kaggle/tweets_data
