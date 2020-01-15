@@ -64,7 +64,7 @@ def extract_service_clients_data():
 
         #set up the search
         filename = "D:/Centrale 3A/OSY/Data Science/repos/observatoire-twitter/extraction_twint/data_service_clients/" + brand.get("filename") + ".csv"
-        search=Search(filename, keyword=brand["account"])
+        search=Search(filename, keyword="@"+brand["username"])
         #start the search
         search.start()
 
