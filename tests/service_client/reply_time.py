@@ -68,8 +68,7 @@ def computes_all_reply_times():
 
     #computes the reply time for every brand, and store it in the appropriate file
     for brand in brands:
-        if brand["username"].lower()=='wholefoods':
-            create_reply_time(brand["username"], brand.get("filename"), save_to_csv=True)
+        create_reply_time(brand["username"], brand.get("filename"), save_to_csv=True)
 
 if __name__=="__main__":
     ##COMPUTES ALL REPLY_TIMES
