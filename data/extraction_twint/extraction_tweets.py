@@ -57,7 +57,7 @@ class Search(Thread):
 
 def extract_service_clients_data():
     #Load csv with account names + filenames
-    brands = load_csv('D:/Centrale 3A/OSY/Data Science/repos/observatoire-twitter/extraction_twint/brand_accounts.csv')
+    brands = load_csv('data/extraction_twint/brand_accounts.csv')
 
     #Launch a search for every brand, and store it in the appropriate file
     for brand in brands:
@@ -71,23 +71,31 @@ def extract_service_clients_data():
 
 def extract_marketing_personnalise_data():
     #Load csv with account names + filenames
-    products = [product.get('product') for product in load_csv('D:/Centrale 3A/OSY/Data Science/repos/observatoire-twitter/extraction_twint/product_keywords.csv')]
+    # products = [product.get('product') for product in load_csv('data/extraction_twint/product_keywords.csv')]
 
     #Launch a search for every brand, and store it in the appropriate file
-    for product in products:
-        print(product)
-
+    # for product in products:
+    #     print(product)
+        product = "pepsi"
         #set up the search
-        filename = "D:/Centrale 3A/OSY/Data Science/repos/observatoire-twitter/extraction_twint/data_marketing_personnalise/" + product + ".csv"
+        filename = product + ".csv"
         search=Search(filename, keyword=product)
         #start the search
+        search.start()
+
+def extract_users_data(brand) :
+    users = [tweet.get('username') for tweet in load_csv(brand+'.csv')]
+    filename = brand + "_users" + ".csv"
+    for k in range (5000) :
+        search = Search(filename, from_username= users[k], allow_append=True)
         search.start()
 
 
 if __name__=="__main__":
 
-    extract_service_clients_data()
-    extract_marketing_personnalise_data()
+    # extract_service_clients_data()
+    #extract_marketing_personnalise_data()
+    extract_users_data('pepsi')
 
 
 

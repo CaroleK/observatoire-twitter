@@ -5,3 +5,6 @@ data_service_clients/
 tweets_data/
 __pycache__/
 credentials.py
+/data/extraction_twint/pepsi.csv
+/data/extraction_twint/pepsi_users.csv
+/data/extraction_twint/pepsi_users_v1.csv
