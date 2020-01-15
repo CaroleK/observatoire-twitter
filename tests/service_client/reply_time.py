@@ -22,9 +22,9 @@ def __compute_reply_time(df, username):
     """
 
     ##Filter brand tweets
-    brand_tweets = df[df['username'] == username.lower()].filter(['conversation_id','datetime'])
+    brand_tweets = df[df['username'] == username[1:].lower()].filter(['conversation_id','datetime'])
     ##Remove brand tweets from the main df
-    df = df[df['username'] != username.lower()].filter(['id','conversation_id','datetime'])
+    df = df[df['username'] != username[1:].lower()].filter(['id','conversation_id','datetime'])
 
     ##Join the tables
     df=df.set_index('conversation_id').join(brand_tweets.set_index('conversation_id'), lsuffix='', rsuffix='_reply')
@@ -39,7 +39,7 @@ def __compute_reply_time(df, username):
 
 def __create_complete_dataframe(username, original_data, reply_time, save_to_csv=False, filename=None):
     #removes replies from the brand
-    df = original_data[original_data['username'] != username.lower()].set_index('id')
+    df = original_data[original_data['username'] != username[1:].lower()].set_index('id')
     #add reply time
     df['reply_time']=reply_time['reply_time']
 
