@@ -79,6 +79,7 @@ def extract_service_clients_data(numberOfBrands, limitNumberOfTweets):
         #set up the search
         filename = "D:/Centrale 3A/OSY/Data Science/repos/observatoire-twitter/data/extraction_twint/tweets_data/data_service_clients/" + brands[i].get("filename") + ".csv"
         search=Search(filename, mention=brands[i].get("account"), limit=limitNumberOfTweets)
+        
         #start the search
         search.start()
     

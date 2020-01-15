@@ -1,7 +1,10 @@
 data_marketing_personnalise/
-data_service_clients/
+**/data_service_clients/raw/*.csv
+**/data_service_clients/with_reply_time/*.csv
 .ipynb_checkpoints
 .idea
-tweets_data/
+tweets_data/*/*.csv
 __pycache__/
 credentials.py
+.vscode
+.vs
