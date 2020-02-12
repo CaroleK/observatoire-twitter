@@ -6,18 +6,18 @@ import sys
 sys.path.insert(0, "D:/Centrale 3A/OSY/Data Science/repos/observatoire-twitter")
 
 class Preprocess:
-     def __init__(self, file, full_df=None, text_df=None):
+     def __init__(self, file, full_df=None, df=None):
         self.file = file
         self.full_df = full_df
-        self.text_df = text_df
+        self.df = df
      
-     def convert_to_df(self, nrows=None):
-         full_df = pd.read_csv(self.file, nrows= nrows)
+     def convert_to_df(self):
+         full_df = pd.read_csv(self.file)
          self.full_df = full_df
          
-         text_df = full_df[["text"]].copy()
-         text_df["raw"] = text_df["text"].astype(str)
-         self.text_df = text_df
+         df = full_df[["tweet","reply_time"]].copy()
+         df["raw"] = df["tweet"].astype(str)
+         self.df = df
 
      def remove_upper_cases(self, text):
         return text.lower()
@@ -39,15 +39,15 @@ class Preprocess:
      def remove_frequent_words(self, text):
         from collections import Counter
         cnt = Counter()
-        for text in self.text_df["text_wo_stop"].values:
+        for text in self.df["text_wo_stop"].values:
             for word in text.split():
                 cnt[word] += 1
      
      def process_text (self, lower_cases = False, remove_punctuation = False, remove_stopwords = False, remove_frequent_words = False):
          if lower_cases:
-             self.text_df["processed"] = self.text_df["raw"].apply(lambda t: self.remove_upper_cases(t))
+             self.df["processed"] = self.df["raw"].apply(lambda t: self.remove_upper_cases(t))
          if remove_punctuation:
-             self.text_df["processed"] = self.text_df["processed"].apply(lambda t: remove_punctuation(t))
+             self.df["processed"] = self.df["processed"].apply(lambda t: remove_punctuation(t))
          if remove_stopwords:
-             self.text_df["processed"] = self.text_df["processed"].apply(lambda t: remove_stopwords(t))
+             self.df["processed"] = self.df["processed"].apply(lambda t: remove_stopwords(t))
         
