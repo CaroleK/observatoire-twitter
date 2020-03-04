@@ -146,7 +146,7 @@ def get_unique(a_list):
 if __name__=="__main__":
 
     #extract_service_clients_data(1, 200)
-    extract_marketing_personnalise_data(1, 100)
+    extract_marketing_personnalise_data(3, 100)
 
 
 
