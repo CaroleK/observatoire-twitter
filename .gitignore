@@ -12,4 +12,4 @@ credentials.py
 **/extraction-kaggle/tweets_data
 **/source/stopwords/
 **/data/extraction_twint/tweets_data/
-
+**/embeddings/

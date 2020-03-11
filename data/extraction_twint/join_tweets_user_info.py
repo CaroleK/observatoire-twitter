@@ -24,6 +24,7 @@ def join_databases(filename):
     tweets, users = __load_databases(filename)
     ##Join the tables
     tweets=tweets.join(users.set_index('username'),how='inner', on='username', lsuffix='', rsuffix='_user')
+    tweets = tweets.set_index('id')
     #save to csv
     tweets.to_csv(path+"/with_user_info/"+filename+".csv")
     return tweets
@@ -32,6 +33,5 @@ if __name__=="__main__":
     ##ONLY A SPECIFIC BRAND
     #join_databases('wholefoods')
 
-    tweets = join_databases('amazon')
+    tweets = join_databases('wholefoods')
     print(tweets.head())
-
